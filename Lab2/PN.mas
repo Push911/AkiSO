@@ -1,0 +1,74 @@
+﻿Input
+Store X
+Store Value
+
+
+Subt one
+
+loop,	Load X
+		Subt Subt
+		Skipcond 400
+		jump divide
+		jump prime
+
+divide,	Load Value
+		Store X
+        
+if, 	Load X
+		Skipcond 400
+		jump else
+		jump prime
+        
+else,	Skipcond 800
+		Jump endIf
+        
+do,	Load X
+	Subt Subt
+	Store X
+	Jump if
+        
+endIf,	Load Subt
+		Add one
+		Store Subt
+		jump divide
+
+nonPrime,	Load Value
+			Subt one
+            Store Value
+            Store X
+            Skipcond 400
+            jump loop
+            Halt
+            
+prime,	Load Value
+		Subt Subt
+		Skipcond 400
+		jump nonPrime
+        
+nextStep,	Load two
+			Store Subt
+			Load Value
+			Output
+			Subt one
+            Store Value
+            Store X
+            jump check
+            
+check,	Load X
+		Subt two
+        Skipcond 400
+        jump loop
+        
+Load two
+Output
+Load one
+Output        
+Halt
+
+X, DEC 0
+one, DEC 1
+zero, DEC 0
+two, DEC 2
+
+Subt, DEC 2
+Value, DEC 0

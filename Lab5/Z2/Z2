@@ -1,0 +1,6 @@
+2.1. 	gcc HandlingSignals.c			gcc CatchKillOrStop.c
+2.2. 	Cannot kill pid(1)  
+		kill -9 1
+			bash: kill: (1) - Operation not permitted
+			In root: Nothing happens
+2.3. 	

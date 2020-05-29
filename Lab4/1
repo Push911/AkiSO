@@ -1,0 +1,474 @@
+#!/bin/bash
+
+tput clear 
+tput civis
+
+tput setaf 8
+tput cup 7 0
+echo 50MB  
+tput cup 7 6
+echo "──────────────────────────"
+
+tput cup 8 0
+echo 10MB  
+tput cup 8 6
+echo "──────────────────────────"
+
+tput cup 9 0
+echo 5MB  
+tput cup 9 6
+echo "──────────────────────────"
+
+tput cup 10 0
+echo 1MB 
+tput cup 10 6
+echo "──────────────────────────"
+
+tput cup 11 0
+echo 500KB 
+tput cup 11 6
+echo "──────────────────────────"
+
+tput cup 12 0
+echo 100KB
+tput cup 12 6
+echo "──────────────────────────"
+
+tput cup 13 0
+echo 50KB
+tput cup 13 6
+echo "──────────────────────────"
+
+tput cup 14 0
+echo 1000B 
+tput cup 14 6
+echo "──────────────────────────"
+
+tput cup 15 0
+echo 100B
+tput cup 15 6
+echo "──────────────────────────"
+
+tput cup 16 0
+echo 10B
+tput cup 16 6
+echo "──────────────────────────"
+
+tput cup 17 0
+echo 1B
+tput cup 17 6
+echo "──────────────────────────"
+
+tput cup 7 40
+echo 50MB  
+tput cup 7 46
+echo "──────────────────────────"
+
+tput cup 8 40
+echo 10MB  
+tput cup 8 46
+echo "──────────────────────────"
+
+tput cup 9 40
+echo 5MB  
+tput cup 9 46
+echo "──────────────────────────"
+
+tput cup 10 40
+echo 1MB 
+tput cup 10 46
+echo "──────────────────────────"
+
+tput cup 11 40
+echo 500KB 
+tput cup 11 46
+echo "──────────────────────────"
+
+tput cup 12 40
+echo 100KB
+tput cup 12 46
+echo "──────────────────────────"
+
+tput cup 13 40
+echo 50KB
+tput cup 13 46
+echo "──────────────────────────"
+
+tput cup 14 40
+echo 1000B 
+tput cup 14 46
+echo "──────────────────────────"
+
+tput cup 15 40
+echo 100B
+tput cup 15 46
+echo "──────────────────────────"
+
+tput cup 16 40
+echo 10B
+tput cup 16 46
+echo "──────────────────────────"
+
+tput cup 17 40
+echo 1B
+tput cup 17 46
+echo "──────────────────────────"
+
+tput cup 1 0
+tput setaf 2
+echo Current Battery Charge:
+
+tput cup 2 0
+tput setaf 2
+echo System Uptime: 
+
+tput cup 6 0
+tput setaf 12
+echo RECIEVE
+
+tput cup 6 40
+tput setaf 12
+echo TRANSMIT
+
+tput cup 3 0
+tput setaf 2
+echo Average Recieve Speed:
+
+tput cup 4 0
+tput setaf 2
+echo Average Transmit Speed:
+
+tput cup 5 0 
+tput setaf 2
+echo System Load: 
+
+while true
+do 
+    declare -a recieve_arr
+    declare -a transmit_arr
+
+    for ((i=31;i>=6;i--))
+    do
+        upTime=$(cat /proc/uptime | awk '{printf("%d:%02d:%02d:%02d\n", ($1/60/60/24), ($1/60/60%24), ($1/60%60), ($1%60))}')
+        capacity=$( cat /sys/class/power_supply/BAT0/uevent | grep "\<POWER_SUPPLY_CAPACITY\>" | cut -f2 -d"=")
+        loadavg=$(cat /proc/loadavg | awk '{print($1,$2,$3)}')
+
+        tput cup 1 24
+        tput setaf 3
+        echo $capacity%
+        
+        tput cup 2 16
+        tput setaf 4
+        echo $upTime
+
+        tput cup 5 13
+        tput setaf 4
+        echo $loadavg
+
+        tput sgr0
+        
+        recieve1=$(grep "wlo1:" /proc/net/dev | awk '{print $2}')
+        sleep 1
+        recieve2=$(grep "wlo1:" /proc/net/dev | awk '{print $2}')
+        speed_recieve="$((recieve2-recieve1))"
+        if [ $i -eq 6 ]
+        then 
+            for ((k=31;k>=6;k--))
+            do
+                for ((l=7;l<18;l++))
+                do
+                    tput setaf 6
+                    tput cup $l $k
+                    echo "─"
+                done    
+            done
+            aver_recieve=0
+            for t in ${recieve_arr[@]}
+            do
+                aver_recieve=$((aver_recieve+t))
+            done
+            tput cup 3 29
+            
+            length=${#recieve_arr[@]}
+            aver_recieve=$((aver_recieve/length))
+
+            tput setaf 1
+            echo "$aver_recieve"
+      
+            unset recieve_arr
+        fi   
+        if [ "$speed_recieve" -ge 50000000 ]
+        then
+            for ((j=7;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 10000000 ]
+        then
+            for ((j=8;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 5000000 ]
+        then
+            for ((j=9;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 1000000 ]
+        then
+            for ((j=10;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 500000 ]
+        then
+            for ((j=11;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 100000 ]
+        then
+            for ((j=12;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 50000 ]
+        then
+            for ((j=13;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 1000 ]
+        then
+            for ((j=14;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 100 ]
+        then
+            for ((j=15;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 10 ]
+        then
+            for ((j=16;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+        if [ "$speed_recieve" -ge 1 ]
+        then
+            for ((j=17;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            recieve_arr+=("$speed_recieve")
+        fi
+    done
+     for ((i=71;i>=46;i--))
+    do
+        upTime=$(cat /proc/uptime | awk '{printf("%d:%02d:%02d:%02d\n", ($1/60/60/24), ($1/60/60%24), ($1/60%60), ($1%60))}')
+        capacity=$( cat /sys/class/power_supply/BAT0/uevent | grep "\<POWER_SUPPLY_CAPACITY\>" | cut -f2 -d"=")
+        loadavg=$(cat /proc/loadavg | awk '{print($1,$2,$3)}')
+        
+        tput cup 1 24
+        tput setaf 3
+        echo "$capacity" 
+        
+        tput cup 2 16
+        tput setaf 4
+        echo "$upTime"
+
+        tput cup 5 13
+        tput setaf 4
+        echo $loadavg
+
+        tput sgr0
+
+        transmit1=$(grep "wlo1:" /proc/net/dev | awk '{print $10}')
+        sleep 1
+
+        transmit2=$(grep "wlo1:" /proc/net/dev | awk '{print $10}')
+        velocity_transmit="$((transmit2-transmit1))"
+
+        if [ $i -eq 46 ]
+        then 
+            for ((k=71;k>=46;k--))
+            do
+                for ((l=7;l<18;l++))
+                do
+                    tput setaf 6
+                    tput cup $l $k
+                    echo "─"
+                done 
+            done
+            aver_recieve=0
+            for t in ${transmit_arr[@]}
+            do
+                aver_transmit=$((aver_transmit+t))
+            done
+            tput cup 4 29
+            
+            length=${#transmit_arr[@]}
+            aver_transmit=$((aver_transmit/length))
+            
+            tput setaf 1
+            echo "$aver_transmit"
+            
+            unset transmit_arr
+        fi   
+        if [ "$velocity_transmit" -ge 50000000 ]
+        then
+            for ((j=7;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 10000000 ]
+        then
+            for ((j=8;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 5000000 ]
+        then
+            for ((j=9;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 1000000 ]
+        then
+            for ((j=10;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 500000 ]
+        then
+            for ((j=11;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 100000 ]
+        then
+            for ((j=12;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 50000 ]
+        then
+            for ((j=13;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 1000 ]
+        then
+            for ((j=14;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 100 ]
+        then
+            for ((j=15;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 10 ]
+        then
+            for ((j=16;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+        if [ "$velocity_transmit" -ge 1 ]
+        then
+            for ((j=17;j<18;j++))
+            do
+                tput setaf 5
+                tput cup $j $i
+                echo "█"
+            done
+            transmit_arr+=("$velocity_transmit")
+        fi
+    done
+done

@@ -1,0 +1,31 @@
+﻿INPUT
+Store X
+INPUT
+Store Y
+
+Load num
+Add X
+Store num
+
+loop,    Load count
+         Add one
+         Store count
+         
+	 Load num
+         Subt Y
+         Store num
+         Skipcond 000 
+         Jump loop
+
+Load count
+Output
+Load num
+Add Y
+Output
+Halt
+
+X, DEC 0
+Y, DEC 0
+num, DEC 0
+count, DEC -1
+one, DEC 1

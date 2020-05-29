@@ -1,0 +1,6 @@
+#!/bin/bash
+for file in $(ls /proc/ | grep [0-9])
+do
+	cat /proc/$file/status 2>/dev/null | grep -e "\<Pid\>" -e "\<PPid\>" -e "\<Name\>" -e "\<State\>" 
+	echo Open files: $(lsof -p $file | wc -l)
+done

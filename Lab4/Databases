@@ -1,0 +1,4 @@
+#!/bin/bash
+curl -o cat.jpg $(curl https://api.thecatapi.com/v1/images/search | jq  -r '.[].url')
+catimg cat.jpg
+echo $(curl -s http://api.icndb.com/jokes/random/ | jq -r '.value.joke')

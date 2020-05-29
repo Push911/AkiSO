@@ -1,0 +1,13 @@
+#!/bin/bash
+
+count=14
+while true
+do
+	cd ~/Dump0
+	lynx -dump http://ki.pwr.edu.pl > $count
+	git add $count 
+	git commit -m $count
+	git push 
+	((count++))
+	sleep 600
+done
